@@ -49,13 +49,22 @@ dependencies {
 
 	implementation ("org.webjars:sockjs-client:1.1.2")
 	implementation ("org.webjars:stomp-websocket:2.3.3-1")
-	implementation ("org.webjars.bower:axios:0.17.1")
+	implementation ("org.webjars.bower:axios:0.21.1")
 
 
 	//롬복
 	implementation("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
+	//타임리프
+	implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+	//레디스
+	//implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+
+	//내장 레디스
+	implementation ("org.springframework.boot:spring-boot-starter-data-redis:3.1.5")
+	implementation ("it.ozimov', name: 'embedded-redis', version: '0.7.2")
 }
 
 tasks.withType<Test> {
