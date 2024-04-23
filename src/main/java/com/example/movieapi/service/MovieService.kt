@@ -9,5 +9,5 @@ interface MovieService {
 
     fun getMovies() : List<MovieDTO>
 
-    fun getMovie(id: Int) : MovieDTO
+    fun getMovie(id: Long) : MovieDTO
 }

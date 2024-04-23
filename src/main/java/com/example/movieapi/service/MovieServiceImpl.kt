@@ -13,7 +13,13 @@ class MovieServiceImpl(
     private val movieMapper: MovieMapper
 ) : MovieService {
     override fun createMovie(movieDTO: MovieDTO) : MovieDTO{
+        val existingMovie = movieRepository.findById(movieDTO.id)
+        if (existingMovie.isPresent) {
+            throw IllegalArgumentException("Movie with ID ${movieDTO.id} already exists")
+        }
+
         val movie = movieMapper.toEntity(movieDTO)
+
         movieRepository.save(movie)
 
         return movieMapper.fromEntity(movie)
@@ -32,7 +38,7 @@ class MovieServiceImpl(
     }
 
 
-    override fun getMovie(id: Int): MovieDTO {
+    override fun getMovie(id: Long): MovieDTO {
         return movieMapper.fromEntity(movieRepository.findById(id).get())
     }
 }

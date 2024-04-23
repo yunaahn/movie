@@ -1,9 +1,7 @@
 package com.example.movieapi.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,19 +14,18 @@ import java.util.Set;
 import java.util.UUID;
 
 
-@Slf4j
-@Getter
-@AllArgsConstructor
-@Builder
-public class ChatRoom  {
+@Data
+public class ChatRoom implements Serializable{
     private String roomId;
     private String name;
 
+    public ChatRoom(String name) {
+        this.roomId = UUID.randomUUID().toString();
+        this.name = name;
+    }
+
     public static ChatRoom of(String name) {
-        return ChatRoom.builder()
-                .name(name)
-                .roomId(UUID.randomUUID().toString())
-                .build();
+        return new ChatRoom(name);
     }
     
 //    @Serial

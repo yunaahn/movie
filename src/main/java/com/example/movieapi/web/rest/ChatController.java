@@ -25,13 +25,5 @@ public class ChatController {
         return message.getMessageType().equals(ChatMessage.MessageType.JOIN);
     }
 
-//    @PostMapping
-//    public ChatRoom createRoom(@RequestParam String name) {
-//        return chatService.createRoom(name);
-//    }
-//
-//    @GetMapping
-//    public List<ChatRoom> getAll() {
-//        return chatService.findAll();
-//    }
+
 }

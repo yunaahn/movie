@@ -5,6 +5,10 @@ import com.example.movieapi.dto.ChatRoom;
 import com.example.movieapi.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
@@ -13,13 +17,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
+
 @Slf4j
 @Service
 public class ChatRoomService {
-    private final ChatRoomRepository chatRoomRepository;
-    private final RedisSubscriber redisSubscriber;
+    private  ChatRoomRepository chatRoomRepository;
+    // #. subscribe
     private final RedisMessageListenerContainer redisMessageListenerContainer;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    public ChatRoomService(RedisMessageListenerContainer redisMessageListenerContainer, RedisTemplate<String, Object> redisTemplate, ChatRoomRepository chatRoomRepository) {
+        this.redisMessageListenerContainer = redisMessageListenerContainer;
+        this.redisTemplate = redisTemplate;
+        this.chatRoomRepository = chatRoomRepository;
+    }
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatRoomService.class);
 
     private final Map<String, ChannelTopic> topics = new HashMap<>();
 
@@ -32,8 +46,12 @@ public class ChatRoomService {
     }
 
     public void createRoom(String name) {
+        logger.debug("Saving name: {}", name);
         ChatRoom chatRoom = ChatRoom.of(name);
+        logger.debug("before Saving chatRoom: {}", chatRoom);
         chatRoomRepository.save(chatRoom);
+        redisTemplate.opsForHash().put("CHAT_ROOMS", chatRoom.getRoomId(), chatRoom);
+        logger.debug("after Saving chatRoom: {}", chatRoom);
     }
 
     public ChannelTopic getTopic(String roomId) {
@@ -44,7 +62,8 @@ public class ChatRoomService {
         ChannelTopic topic = topics.get(roomId);
         if (topic == null) {
             topic = new ChannelTopic(roomId);
-            redisMessageListenerContainer.addMessageListener(redisSubscriber, topic);
+            // TODO: Redis에 메시지 수신을 처리할 메서드를 정의하고 MessageListenerAdapter를 사용하여 등록
+            // redisMessageListenerContainer.addMessageListener(new MessageListenerAdapter(), topic);
             topics.put(roomId, topic);
         }
     }

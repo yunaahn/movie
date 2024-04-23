@@ -11,5 +11,7 @@ data class MovieDTO(
     var name: String,
 
 
-    var rating:Int
+    var rating:Int,
+
+    val genre_id: Long?
 )

@@ -64,7 +64,9 @@ dependencies {
 
 	//내장 레디스
 	implementation ("org.springframework.boot:spring-boot-starter-data-redis:3.1.5")
-	implementation ("it.ozimov', name: 'embedded-redis', version: '0.7.2")
+
+	//로그
+	implementation ("org.springframework.boot:spring-boot-starter-log4j2") // 필요시 Log4j2 사용
 }
 
 tasks.withType<Test> {

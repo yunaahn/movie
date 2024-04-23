@@ -25,7 +25,7 @@ public class ChatRoomController {
     }
 
     @PostMapping("/chat/room")
-    public String createRoom(@RequestParam String name) {
+    public String createRoom(@RequestParam("name") String name) {
         chatRoomService.createRoom(name);
         return "redirect:/chat/rooms";
     }

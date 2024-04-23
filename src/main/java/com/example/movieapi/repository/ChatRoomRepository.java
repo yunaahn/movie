@@ -3,12 +3,17 @@ package com.example.movieapi.repository;
 import com.example.movieapi.dto.ChatRoom;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.flogger.Flogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@EnableRedisRepositories
 @Repository
 public class ChatRoomRepository {
     private static final String CHAT_ROOMS = "CHAT_ROOM";
