@@ -1,12 +1,16 @@
 package com.example.movieapi.dto
 
+import com.example.movieapi.entity.Rating
+import java.io.Serializable
+
 data class RatingDTO(
 
     val id:Long,
 
-    val user_id:Long,
+    var user_id:Long,
 
-    val movie_id: Long,
+    var movie_id: Long,
 
-    val rating:Int
-)
+    var rating:Int
+): Serializable
+

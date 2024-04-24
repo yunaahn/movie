@@ -8,14 +8,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class GenreMapper : Mapper<GenreDTO, Genre> {
-//    override fun fromEntity(entity: Movie): MovieDTO {
-//        return MovieDTO(
-//            entity.id,
-//            entity.name,
-//            entity.rating
-//        )
-//
-//    }
 
     override fun fromEntity(entity: Genre): GenreDTO = GenreDTO(
         entity.id,

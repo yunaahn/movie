@@ -1,20 +1,24 @@
 package com.example.movieapi.entity
 
 import jakarta.persistence.*
+import org.springframework.data.redis.core.RedisHash
+import java.io.Serializable
 
+
+@Entity
 data class Rating(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id:Long? = null,
+    val id:Long,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    val user: User? = null,
+    @Column(name = "user_id")
+    var user_id: Long,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id")
-    val movie: Movie? = null,
+    @Column(name = "movie_id")
+    var movie_id: Long,
 
-    val rating:Int
+    var rating:Int
+
+
 )

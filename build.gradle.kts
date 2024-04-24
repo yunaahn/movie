@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-
+	val queryDslVersion = "5.0.0"
 
 
 	implementation("org.springframework.boot:spring-boot-starter-aop")
@@ -30,7 +30,7 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	runtimeOnly("com.h2database:h2")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation(kotlin("stdlib-jdk8"))
 
@@ -60,13 +60,25 @@ dependencies {
 	implementation ("org.springframework.boot:spring-boot-starter-thymeleaf")
 
 	//레디스
-	//implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+	//implementation ("org.springframework.data:spring-data-redis:3.1.5")
+	//implementation ("org.springframework.boot:spring-boot-starter-cache:3.1.2")
 
 	//내장 레디스
-	implementation ("org.springframework.boot:spring-boot-starter-data-redis:3.1.5")
+	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 
 	//로그
-	implementation ("org.springframework.boot:spring-boot-starter-log4j2") // 필요시 Log4j2 사용
+	//implementation ("org.springframework.boot:spring-boot-starter-log4j2") // 필요시 Log4j2 사용
+
+	//query dsl
+	implementation ("com.querydsl:querydsl-jpa:5.0.0:jakarta") //jakarta 붙여야 config 파일 설정시 에러안남
+	kapt("com.querydsl:querydsl-apt:5.0.0:jakarta") // 설정해야 Qclass가 생김......
+	annotationProcessor ("com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+	annotationProcessor ("jakarta.annotation:jakarta.annotation-api")
+	annotationProcessor ("jakarta.persistence:jakarta.persistence-api")
+	api("com.querydsl:querydsl-jpa")
+
+	//MaridDB
+	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 }
 
 tasks.withType<Test> {

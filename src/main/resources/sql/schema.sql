@@ -9,3 +9,10 @@ CREATE TABLE IF NOT EXISTS genre(
     genre_id NUMBER(3) PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(40) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS rating(
+    id NUMBER(3) PRIMARY KEY AUTO_INCREMENT,
+    user_id NUMBER(3),
+    movie_id  NUMBER(3),
+    rating NUMBER(3)
+);

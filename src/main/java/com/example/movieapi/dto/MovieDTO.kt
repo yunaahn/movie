@@ -7,9 +7,7 @@ data class MovieDTO(
 
     val id:Long,
 
-
     var name: String,
-
 
     var rating:Int,
 

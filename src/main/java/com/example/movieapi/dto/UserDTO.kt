@@ -7,6 +7,8 @@ data class UserDTO(
     var id:Long,
 
 
-    var name:String = ""
+    var name:String = "",
+
+    var password:String = ""
 
 )
