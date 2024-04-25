@@ -22,26 +22,26 @@ class RatingController (
 
     val logger = LogManager.getLogger(RatingController::class.java)!!
 
-    @PostMapping("/add")
-    fun addRating(@RequestBody ratingDTO: RatingDTO) : ResponseEntity<RatingDTO> {
-        return ResponseEntity(ratingService.createRating(ratingDTO), HttpStatus.OK)
-    }
-
-    @PostMapping("/save")
-    fun saveRating(@RequestBody ratingDTO: RatingDTO): ResponseEntity<Any> {
-        val rating = ratingMapper.toEntity(ratingDTO)
-        logger.info(rating.toString())
-        ratingRedisService.saveRating(rating)
-        return ResponseEntity.ok().build()
-    }
-
-    @GetMapping("/{id}")
-    fun findRatingById(@PathVariable id: Long): ResponseEntity<Any> {
-        val rating = ratingRedisService.findRatingById(id)
-        return if (rating != null) {
-            ResponseEntity.ok(rating)
-        } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rating not found")
-        }
-    }
+//    @PostMapping("/add")
+//    fun addRating(@RequestBody ratingDTO: RatingDTO) : ResponseEntity<RatingDTO> {
+//        return ResponseEntity(ratingService.createRating(ratingDTO), HttpStatus.OK)
+//    }
+//
+//    @PostMapping("/save")
+//    fun saveRating(@RequestBody ratingDTO: RatingDTO): ResponseEntity<Any> {
+//        val rating = ratingMapper.toEntity(ratingDTO)
+//        logger.info(rating.toString())
+//        ratingRedisService.saveRating(rating)
+//        return ResponseEntity.ok().build()
+//    }
+//
+//    @GetMapping("/{id}")
+//    fun findRatingById(@PathVariable id: Long): ResponseEntity<Any> {
+//        val rating = ratingRedisService.findRatingById(id)
+//        return if (rating != null) {
+//            ResponseEntity.ok(rating)
+//        } else {
+//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rating not found")
+//        }
+//    }
 }

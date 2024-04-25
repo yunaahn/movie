@@ -79,6 +79,7 @@ dependencies {
 
 	//MaridDB
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+
 }
 
 tasks.withType<Test> {

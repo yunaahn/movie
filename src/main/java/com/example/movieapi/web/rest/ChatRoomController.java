@@ -32,7 +32,7 @@ public class ChatRoomController {
 
     @GetMapping("/chat/room/{roomId}")
     @ResponseBody
-    public ChatRoom getRoom(@PathVariable String roomId) {
+    public ChatRoom getRoom(@PathVariable("roomId")  String roomId) {
         return chatRoomService.findRoomById(roomId);
     }
 }

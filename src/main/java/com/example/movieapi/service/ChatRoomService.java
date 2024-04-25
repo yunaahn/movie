@@ -25,17 +25,21 @@ public class ChatRoomService {
     // #. subscribe
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisTemplate<String, Object> redisTemplate;
+    private Map<String, ChannelTopic> topics;
 
     @Autowired
-    public ChatRoomService(RedisMessageListenerContainer redisMessageListenerContainer, RedisTemplate<String, Object> redisTemplate, ChatRoomRepository chatRoomRepository) {
+    public ChatRoomService(RedisMessageListenerContainer redisMessageListenerContainer,
+                           RedisTemplate<String, Object> redisTemplate, ChatRoomRepository chatRoomRepository) {
         this.redisMessageListenerContainer = redisMessageListenerContainer;
         this.redisTemplate = redisTemplate;
         this.chatRoomRepository = chatRoomRepository;
+
+
     }
 
     private static final Logger logger = LoggerFactory.getLogger(ChatRoomService.class);
 
-    private final Map<String, ChannelTopic> topics = new HashMap<>();
+
 
     public List<ChatRoom> findAll() {
         return chatRoomRepository.findAll();
