@@ -19,7 +19,7 @@ public class ChatController {
             chatRoomService.enterChatRoom(message.getRoomId());
             message.setMessage(message.getSender() + "님이 입장하셨습니다.");
         }
-        redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
+       // redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
     }
     private boolean isJoin(final ChatMessage message) {
         return message.getMessageType().equals(ChatMessage.MessageType.JOIN);

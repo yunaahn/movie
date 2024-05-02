@@ -11,25 +11,40 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
-@Slf4j
-@RequiredArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Service
 public class RedisSubscriber implements MessageListener {
-    private final ObjectMapper objectMapper;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final SimpMessageSendingOperations messageTemplate;
+//    private final ObjectMapper objectMapper;
+//    private final RedisTemplate<String, Object> redisTemplate;
+//    private final SimpMessageSendingOperations messageTemplate;
+
+    public static List<String> messageList = new ArrayList<>();
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
-        try {
-            String publishMessage = redisTemplate
-                    .getStringSerializer()
-                    .deserialize(message.getBody());
-
-            ChatMessage roomMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
-            messageTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public void onMessage(Message message, byte[] bytes) {
+        messageList.add(message.toString());
+        System.out.println("Message received" + message.toString());
     }
+
+    public List<String> getmessageList() {
+        return messageList;
+    }
+
+
+//    @Override
+//    public void onMessage(Message message, byte[] pattern) {
+//        try {
+//            String publishMessage = redisTemplate
+//                    .getStringSerializer()
+//                    .deserialize(message.getBody());
+//
+//            ChatMessage roomMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
+//            messageTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

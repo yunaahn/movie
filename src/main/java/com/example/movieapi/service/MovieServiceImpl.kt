@@ -1,17 +1,26 @@
 package com.example.movieapi.service
 
 import com.example.movieapi.dto.MovieDTO
-import com.example.movieapi.entity.Movie
+import com.example.movieapi.dto.RatingDTO
+import com.example.movieapi.entity.MovieWithRating
+import com.example.movieapi.entity.Rating
 import com.example.movieapi.repository.MovieRepository
+import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.utils.mapper.MovieMapper
+import com.example.movieapi.utils.mapper.RatingMapper
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.GetMapping
+import java.text.DecimalFormat
 
 @Service
 class MovieServiceImpl(
     private val movieRepository: MovieRepository,
-    private val movieMapper: MovieMapper
+    private val movieMapper: MovieMapper,
+    private val ratingRepository: RatingRepository,
+    private val ratingService: RatingService
 ) : MovieService {
+
+    val log = LoggerFactory.getLogger(MovieServiceImpl::class.java)!!
     override fun createMovie(movieDTO: MovieDTO) : MovieDTO{
         val existingMovie = movieRepository.findById(movieDTO.id)
         if (existingMovie.isPresent) {
@@ -19,11 +28,13 @@ class MovieServiceImpl(
         }
 
         val movie = movieMapper.toEntity(movieDTO)
-
         movieRepository.save(movie)
+
 
         return movieMapper.fromEntity(movie)
     }
+
+
 
     override fun getMovies(): List<MovieDTO> {
         val movies = movieRepository.getAllMovies()
@@ -40,5 +51,25 @@ class MovieServiceImpl(
 
     override fun getMovie(id: Long): MovieDTO {
         return movieMapper.fromEntity(movieRepository.findById(id).get())
+    }
+
+    override fun deleteMovie(id: Long): Long {
+        movieRepository.deleteById(id)
+        return id
+    }
+
+
+    override fun getMovieWithRating(movie_Id: Long): MovieWithRating  {
+        val movie = movieRepository.findById(movie_Id).orElseThrow { NoSuchElementException("Movie not found") }
+        val movieDTO = movieMapper.fromEntity(movie)
+
+        val ratings = ratingRepository.findByMovieId(movie_Id)
+        log.info("movie_Id =" + movie_Id)
+
+        val averageRating = ratings.map { it.rating }.average().toDouble()
+        val formattedRating = DecimalFormat("#.##").format(averageRating)
+        log.info("ratings =" + ratings)
+        log.info("averageRating =" + formattedRating)
+        return MovieWithRating(movieDTO, formattedRating)
     }
 }

@@ -7,10 +7,10 @@ data class RatingDTO(
 
     val id:Long,
 
-    var user_id:Long,
+    var user_id:Long?,
 
     var movie_id: Long,
 
-    var rating:Int
+    var rating:Long
 ): Serializable
 

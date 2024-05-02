@@ -1,5 +1,6 @@
 package com.example.movieapi.service;
 
+import com.example.movieapi.configuration.RedisPublisher;
 import com.example.movieapi.configuration.RedisSubscriber;
 import com.example.movieapi.dto.ChatRoom;
 import com.example.movieapi.repository.ChatRoomRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -55,6 +57,12 @@ public class ChatRoomService {
         logger.debug("before Saving chatRoom: {}", chatRoom);
         chatRoomRepository.save(chatRoom);
         redisTemplate.opsForHash().put("CHAT_ROOMS", chatRoom.getRoomId(), chatRoom);
+
+        // 각 채팅방에 대한 토픽 생성
+        ChannelTopic topic = new ChannelTopic("chatRoom." + chatRoom.getRoomId());
+        RedisPublisher publisher = new RedisPublisher(redisTemplate, topic);
+
+
         logger.debug("after Saving chatRoom: {}", chatRoom);
     }
 
@@ -67,7 +75,7 @@ public class ChatRoomService {
         if (topic == null) {
             topic = new ChannelTopic(roomId);
             // TODO: Redis에 메시지 수신을 처리할 메서드를 정의하고 MessageListenerAdapter를 사용하여 등록
-            // redisMessageListenerContainer.addMessageListener(new MessageListenerAdapter(), topic);
+             redisMessageListenerContainer.addMessageListener(new MessageListenerAdapter(), topic);
             topics.put(roomId, topic);
         }
     }

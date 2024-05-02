@@ -61,7 +61,7 @@ dependencies {
 
 	//레디스
 	//implementation ("org.springframework.data:spring-data-redis:3.1.5")
-	//implementation ("org.springframework.boot:spring-boot-starter-cache:3.1.2")
+	implementation ("org.springframework.boot:spring-boot-starter-cache:3.1.2")
 
 	//내장 레디스
 	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
@@ -79,6 +79,11 @@ dependencies {
 
 	//MaridDB
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+
+	// Swagger docs openapi
+	implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
+	implementation("io.github.microutils:kotlin-logging:3.0.5")
+	implementation("org.hamcrest:hamcrest-core:1.3")
 
 }
 

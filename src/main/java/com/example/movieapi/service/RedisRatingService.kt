@@ -3,7 +3,6 @@ package com.example.movieapi.service
 import com.example.movieapi.entity.Rating
 import com.example.movieapi.repository.RatingRedisRepository
 import com.example.movieapi.repository.RatingRepository
-import com.example.movieapi.web.rest.RatingController
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.logging.log4j.LogManager
 import org.springframework.data.redis.core.RedisTemplate

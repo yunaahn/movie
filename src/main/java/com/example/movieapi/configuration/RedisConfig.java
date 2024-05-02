@@ -18,45 +18,71 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String host;
-
-    @Value("${spring.data.redis.port}")
-    private int port;
-
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory(){
-        return new LettuceConnectionFactory(host,port);
-    }
+//    @Value("${spring.data.redis.host}")
+//    private String host;
+//
+//    @Value("${spring.data.redis.port}")
+//    private int port;
 
 
+   @Autowired
+   private RedisConnectionFactory redisConnectionFactory;
 
-    @Bean
-    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        return container;
-    }
+   @Bean
+   public  RedisMessageListenerContainer container(RedisConnectionFactory redisConnectionFactory,
+                                                  MessageListenerAdapter messageListenerAdapter) {
+       RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
+       redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
+       redisMessageListenerContainer.addMessageListener(messageListenerAdapter, topic());
+       return redisMessageListenerContainer;
+   }
+
+   @Bean
+   MessageListenerAdapter messageListenerAdapter() {
+       return new MessageListenerAdapter(new RedisSubscriber(), "onMessage");
+   }
+
+   @Bean
+   public ChannelTopic topic(){
+       return new ChannelTopic("stack." + UUID.randomUUID().toString());
+   }
+
+
+//    @Bean
+//    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
+//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+//        container.setConnectionFactory(connectionFactory);
+//        return container;
+//    }
+
 
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
-        return template;
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean
+    MessagePublisher messagePublisher(){
+       return new RedisPublisher(redisTemplate(redisConnectionFactory), topic());
     }
 
 }
