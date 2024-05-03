@@ -15,4 +15,6 @@ interface MovieService {
     fun deleteMovie(id: Long) : Long
 
     fun getMovieWithRating(movie_Id: Long): MovieWithRating
+
+    fun searchMoviesByNameContaining(keyword: String): List<Movie>
 }

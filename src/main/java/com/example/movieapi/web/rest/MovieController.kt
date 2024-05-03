@@ -1,6 +1,7 @@
 package com.example.movieapi.web.rest
 
 import com.example.movieapi.dto.MovieDTO
+import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
 import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.service.MovieService
@@ -44,6 +45,13 @@ class MovieController (
     fun deleteMovie(@PathVariable id: Long): ResponseEntity<Long> {
         return ResponseEntity(movieService.deleteMovie(id), HttpStatus.OK)
 
+    }
+
+    //검색
+    @GetMapping("/search")
+    fun searchMovie(@RequestParam keyword: String) : ResponseEntity<List<Movie>> {
+        val movies = movieService.searchMoviesByNameContaining(keyword)
+        return ResponseEntity.ok(movies)
     }
 
 

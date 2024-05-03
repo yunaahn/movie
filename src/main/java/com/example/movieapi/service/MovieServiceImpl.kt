@@ -2,6 +2,7 @@ package com.example.movieapi.service
 
 import com.example.movieapi.dto.MovieDTO
 import com.example.movieapi.dto.RatingDTO
+import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
 import com.example.movieapi.entity.Rating
 import com.example.movieapi.repository.MovieRepository
@@ -71,5 +72,9 @@ class MovieServiceImpl(
         log.info("ratings =" + ratings)
         log.info("averageRating =" + formattedRating)
         return MovieWithRating(movieDTO, formattedRating)
+    }
+
+    override fun searchMoviesByNameContaining(keyword: String): List<Movie> {
+        return movieRepository.searchMoviesByNameContaining(keyword)
     }
 }
