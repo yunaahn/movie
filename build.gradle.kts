@@ -81,9 +81,10 @@ dependencies {
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 
 	// Swagger docs openapi
-	implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
+	//implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
 	implementation("io.github.microutils:kotlin-logging:3.0.5")
 	implementation("org.hamcrest:hamcrest-core:1.3")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
 }
 

@@ -15,3 +15,13 @@ CREATE TABLE IF NOT EXISTS rating(
     movie_id  NUMBER(3),
     rating NUMBER(3)
 );
+
+CREATE TABLE IF NOT EXISTS member(
+    id NUMBER(3) PRIMARY KEY AUTO_INCREMENT,
+    loginId VARCHAR(40) NOT NULL,
+    name VARCHAR(40) NOT NULL,
+    password VARCHAR(40) NOT NULL
+);
+
+
+
