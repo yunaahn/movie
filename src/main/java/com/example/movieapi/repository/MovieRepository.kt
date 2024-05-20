@@ -12,6 +12,12 @@ interface MovieRepository : CrudRepository<Movie, Long> {
     @Query("select m from Movie m")
     fun getAllMovies() : List<Movie>
 
+    @Query("select m from Movie m order by m.name asc")
+    fun getAllMoviesByName(@Param("keyword") keyword: String) : List<Movie>
+
+    @Query("select m from Movie m order by m.rating desc")
+    fun getAllMoviesByRating(@Param("keyword") keyword: String) : List<Movie>
+
     @Query("select m from Movie m where m.name like %:keyword%")
     fun searchMoviesByNameContaining(@Param("keyword") keyword: String): List<Movie>
 

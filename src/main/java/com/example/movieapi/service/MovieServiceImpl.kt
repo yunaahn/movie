@@ -6,6 +6,7 @@ import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
 import com.example.movieapi.entity.Rating
 import com.example.movieapi.repository.MovieRepository
+import com.example.movieapi.repository.MovieRepositoryImpl
 import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.utils.mapper.MovieMapper
 import com.example.movieapi.utils.mapper.RatingMapper
@@ -16,6 +17,7 @@ import java.text.DecimalFormat
 @Service
 class MovieServiceImpl(
     private val movieRepository: MovieRepository,
+    private val movieRepositoryImpl: MovieRepositoryImpl,
     private val movieMapper: MovieMapper,
     private val ratingRepository: RatingRepository,
     private val ratingService: RatingService
@@ -74,7 +76,13 @@ class MovieServiceImpl(
         return MovieWithRating(movieDTO, formattedRating)
     }
 
-    override fun searchMoviesByNameContaining(keyword: String): List<Movie> {
-        return movieRepository.searchMoviesByNameContaining(keyword)
+    override fun searchMoviesByNameContaining(keyword: String, orderBy : String): List<MovieDTO> {
+        val result = hashMapOf<Long, MovieDTO>();
+        val movies = when (orderBy) {
+            "name" -> movieRepositoryImpl.findAllMoviesByName(keyword)
+            "rating" -> movieRepositoryImpl.findAllMoviesByRating(keyword)
+            else -> movieRepositoryImpl.findAllMovies()
+        }
+        return movies.map { movieMapper.fromEntity(it) }
     }
 }

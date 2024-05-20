@@ -24,14 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     //@Bean
-    public FilterRegistrationBean logFilter() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new
-                FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new LogFilter());
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
-        return filterRegistrationBean;
-    }
+
 //테스트 중이라 풀어놓음
     //@Override
 //    public void addInterceptors(InterceptorRegistry registry) {

@@ -49,9 +49,9 @@ class MovieController (
 
     //검색
     @GetMapping("/search")
-    fun searchMovie(@RequestParam keyword: String) : ResponseEntity<List<Movie>> {
-        val movies = movieService.searchMoviesByNameContaining(keyword)
-        return ResponseEntity.ok(movies)
+    fun searchMovie(@RequestParam keyword: String,
+                    @RequestParam orderBy: String) : List<MovieDTO> {
+        return movieService.searchMoviesByNameContaining(keyword, orderBy)
     }
 
 
