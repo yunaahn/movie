@@ -38,17 +38,13 @@ class MovieServiceImpl(
     }
 
 
-
-    override fun getMovies(): List<MovieDTO> {
-        val movies = movieRepository.getAllMovies()
-
-        if (movies.isEmpty())
-            throw Exception("There is no movies to display")
-
-        return movies.map {
-            movieMapper.fromEntity(it)
+    override fun getMovies(orderBy : String): List<MovieDTO> {
+        val movies = when (orderBy) {
+            "name" -> movieRepositoryImpl.movieListByName(orderBy)
+            "rating" -> movieRepositoryImpl.movieListByRating(orderBy)
+            else -> movieRepositoryImpl.movieList(orderBy)
         }
-
+        return movies.map { movieMapper.fromEntity(it) }
     }
 
 

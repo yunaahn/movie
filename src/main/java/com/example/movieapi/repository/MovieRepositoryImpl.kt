@@ -17,6 +17,27 @@ class MovieRepositoryImpl (
 
     private val movie: QMovie = QMovie.movie
 
+    //조회(리스트 페이지)
+
+    override fun movieList(orderBy: String): List<Movie> {
+        return queryFactory.selectFrom(movie)
+            .orderBy(movie.id.desc())
+            .fetch()
+    }
+
+    override fun movieListByRating(orderBy: String): List<Movie> {
+        return queryFactory.selectFrom(movie)
+            .orderBy(movie.rating.desc())
+            .fetch()
+    }
+
+    override fun movieListByName(orderBy: String): List<Movie> {
+        return queryFactory.selectFrom(movie)
+            .orderBy(movie.name.desc())
+            .fetch()
+    }
+
+    //검색기능
     override fun findAllMovies(): List<Movie> {
         return queryFactory.selectFrom(movie)
             .fetch()
@@ -41,6 +62,7 @@ class MovieRepositoryImpl (
             .where(nameContains(keyword))
             .fetch()
     }
+
 
     private fun nameContains(keyword: String): BooleanExpression {
         return movie.name.containsIgnoreCase(keyword)

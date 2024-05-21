@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 interface MovieService{
     fun createMovie(movieDTO: MovieDTO) : MovieDTO
 
-    fun getMovies() : List<MovieDTO>
+    //fun getMovies() : List<MovieDTO>
 
     fun getMovie(id: Long) : MovieDTO
 
@@ -23,4 +23,5 @@ interface MovieService{
 
     fun searchMoviesByNameContaining(keyword: String, orderBy : String): List<MovieDTO>
 
+    fun getMovies(orderBy : String): List<MovieDTO>
 }

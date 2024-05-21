@@ -28,10 +28,10 @@ class MovieController (
 
         return ResponseEntity(movieService.createMovie(movieDTO), HttpStatus.OK)
     }
-    //영화 리스트
+    //영화 리스트 -> 장르, 평점 별로 조회 추가
     @GetMapping("/list")
-    fun getMovies(): ResponseEntity<List<MovieDTO>> {
-        return ResponseEntity(movieService.getMovies(), HttpStatus.OK)
+    fun getMovies(@RequestParam orderBy: String): ResponseEntity<List<MovieDTO>> {
+        return ResponseEntity(movieService.getMovies(orderBy), HttpStatus.OK)
     }
     //id 별 리스트 -> 평점 함께 조회되는 걸 추가하고 싶음
     @GetMapping("/list/{id}")
