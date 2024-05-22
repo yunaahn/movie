@@ -2,6 +2,7 @@ package com.example.movieapi.jwt;
 
 import com.example.movieapi.dto.CustomUserDetails;
 import com.example.movieapi.entity.User;
+import com.example.movieapi.service.CustomUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, CustomUserDetailService customUserDetailService) {
 
         this.jwtUtil = jwtUtil;
     }

@@ -20,7 +20,7 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @GetMapping("/login")
+    @GetMapping("/loginpage")
     public String login() {
         return "/login/login"; // login.html 뷰를 반환
     }

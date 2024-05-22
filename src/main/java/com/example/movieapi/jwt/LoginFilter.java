@@ -1,6 +1,7 @@
 package com.example.movieapi.jwt;
 
 import com.example.movieapi.dto.CustomUserDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -23,24 +25,42 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
 
+
+
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-      //  setFilterProcessesUrl("/login");// url 설정하기 ??
+
+        setFilterProcessesUrl("/login");// url 설정하기 ??
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
 
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+            //폼데이터에서 추출하는 방식
+            // String username = obtainUsername(request);
+            // String password = obtainPassword(request);
 
-        System.out.println(username);
+            //클라이언트 -> json 데이터에서 파싱하도록 추출
+            Map<String, String> credentials = objectMapper.readValue(request.getInputStream(), Map.class);
+            String username = credentials.get("username");
+            String password = credentials.get("password");
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+            if (username == null || password == null) {
+                throw new RuntimeException("Username or password cannot be null");
+            }
 
-        return authenticationManager.authenticate(authToken);
+            System.out.println("username = " + username);
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+            return authenticationManager.authenticate(authToken);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    //로그인 성공 시 액션
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
@@ -60,6 +80,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addHeader("Authorization", "Bearer " + token);
     }
 
+    //실패 시 액션
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
 
