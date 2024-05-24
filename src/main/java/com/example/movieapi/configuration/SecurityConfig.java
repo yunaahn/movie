@@ -14,6 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -47,6 +50,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         //csrf disable
+
+
         http
                 .csrf((auth) -> auth.disable()); //세션방식은 세션이 고정되어 csrf 방어해줘야하지만 jwt는 csrf를 stateless로 사용해서 괜찮음
 
@@ -57,7 +62,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/movie/**", "/rating/**", "/join/**",
+                        .requestMatchers("/", "/movie/**", "/join/**",
                                 "/loginpage/**", "/login/**", "/swagger-ui/**").permitAll() //인가 필요 없음
                         .requestMatchers("/admin").hasRole("ADMIN") //해당페이지는 어떤 롤 필요한지
                         .anyRequest().authenticated());// 그 외는 로그인해야함

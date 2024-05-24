@@ -5,6 +5,36 @@
     <title>admin</title>
 </head>
 <body>
+<h2>Admin Page</h2>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var token = localStorage.getItem("token");
+        if (!token) {
+            console.log("No token found. Redirecting to login page.");
+            window.location.href = "/loginpage";
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/admin", true);
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    console.log("Response:", xhr.responseText);
+                    document.body.innerHTML += "<p>" + xhr.responseText + "</p>";
+                } else {
+                    console.log("Error:", xhr.status);
+                    if (xhr.status === 401) {
+                        window.location.href = "/loginpage";
+                    }
+                }
+            }
+        };
+        xhr.send();
+    });
+</script>
 
 </body>
 </html>

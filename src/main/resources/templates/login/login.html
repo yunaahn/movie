@@ -23,9 +23,17 @@
         xhr.open("POST", "/login", true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var token = xhr.getResponseHeader("Authorization");
-                console.log("Token:", token);
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var token = xhr.getResponseHeader("Authorization");
+                    if (token) {
+                        localStorage.setItem("token", token.split(" ")[1]); // "Bearer " 부분을 제거하고 저장
+                        console.log("Token saved:", token);
+                       // window.location.href = "/admin"; // 로그인 후 /admin 페이지로 리디렉션
+                    }
+                } else {
+                    console.log("Login error:", xhr.status);
+                }
             }
         };
 
@@ -36,6 +44,8 @@
 
         xhr.send(data);
     });
+
+
 </script>
 </body>
 </html>
