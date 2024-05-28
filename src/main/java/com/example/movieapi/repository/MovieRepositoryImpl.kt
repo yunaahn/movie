@@ -1,6 +1,8 @@
 package com.example.movieapi.repository
 
 import com.example.movieapi.entity.Movie
+import com.example.movieapi.entity.QGenre
+import com.example.movieapi.entity.QGenre.genre
 import com.example.movieapi.entity.QMovie
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -16,6 +18,7 @@ class MovieRepositoryImpl (
 ) : QuerydslRepositorySupport(Movie::class.java), CustomMovieRepository {
 
     private val movie: QMovie = QMovie.movie
+    private val genre: QGenre = QGenre.genre
 
     //조회(리스트 페이지)
 
@@ -30,6 +33,7 @@ class MovieRepositoryImpl (
             .orderBy(movie.rating.desc())
             .fetch()
     }
+
 
     override fun movieListByName(orderBy: String): List<Movie> {
         return queryFactory.selectFrom(movie)

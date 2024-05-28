@@ -1,6 +1,7 @@
 package com.example.movieapi.repository
 
 import com.example.movieapi.dto.MovieDTO
+import com.example.movieapi.dto.MovieWithAvgRatingDTO
 import com.example.movieapi.entity.Movie
 import io.lettuce.core.dynamic.annotation.Param
 import org.springframework.data.jpa.repository.Query
@@ -13,7 +14,7 @@ interface MovieRepository : CrudRepository<Movie, Long> {
     fun getAllMovies() : List<Movie>
 
     @Query("select m from Movie m order by m.name asc")
-    fun getAllMoviesByName(@Param("keyword") keyword: String) : List<Movie>
+    fun getAllMoviesByName(@Param("keyword") keyword: String) : List<MovieWithAvgRatingDTO>
 
     @Query("select m from Movie m order by m.rating desc")
     fun getAllMoviesByRating(@Param("keyword") keyword: String) : List<Movie>
