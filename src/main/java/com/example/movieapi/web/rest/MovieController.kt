@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 @Log4j2
 @RestController
 @RequestMapping("/movie")
+@CrossOrigin(origins = arrayOf("http://localhost:5175"))
 class MovieController (
     private val movieService: MovieService,
     private val ratingRepository: RatingRepository
