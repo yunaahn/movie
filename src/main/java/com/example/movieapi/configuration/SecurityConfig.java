@@ -62,7 +62,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/movie/**", "/join/**",
+                        .requestMatchers("/", "/**","/movie/**", "/join/**","/spring/upload",
                                 "/loginpage/**", "/login/**", "/swagger-ui/**").permitAll() //인가 필요 없음
                         .requestMatchers("/admin").hasRole("ADMIN") //해당페이지는 어떤 롤 필요한지
                         .anyRequest().authenticated());// 그 외는 로그인해야함

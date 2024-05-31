@@ -14,6 +14,8 @@ data class Movie(
     var rating: Int,
 
     @Column(name = "genre_id") // genre_id 컬럼과 매핑
-    var genre_id: Long? = null // genre_id를 직접 저장하는 필드
+    var genre_id: Long? = null, // genre_id를 직접 저장하는 필드
+
+    var attachFileName: String?
 
 )

@@ -1,5 +1,6 @@
 package com.example.movieapi.dto
 
+import com.example.movieapi.entity.UploadFile
 import org.jetbrains.annotations.NotNull
 
 data class MovieDTO(
@@ -11,5 +12,9 @@ data class MovieDTO(
 
     var rating:Int,
 
-    val genre_id: Long?
-)
+    val genre_id: Long?,
+
+    var attachFile: UploadFile = UploadFile("", "")
+
+
+    )

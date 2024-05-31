@@ -27,7 +27,7 @@ class MovieServiceImpl(
     override fun createMovie(movieDTO: MovieDTO) : MovieDTO{
         val existingMovie = movieRepository.findById(movieDTO.id)
         if (existingMovie.isPresent) {
-            throw IllegalArgumentException("Movie with ID ${movieDTO.id} already exists")
+            throw RuntimeException("Movie with ID ${movieDTO.id} already exists.")
         }
 
         val movie = movieMapper.toEntity(movieDTO)
