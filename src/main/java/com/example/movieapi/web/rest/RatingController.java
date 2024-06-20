@@ -38,7 +38,7 @@ public class RatingController {
         return RedisSubscriber.messageList;
     }
 
-    //db에서 저장되는 값이 들옴 - > 레디스 저장값으로 수정하고싶음
+    //db에서 저장되는 값이 들옴
     @GetMapping("/list/{movieId}")
     public ResponseEntity<List<ResponseRatingDTO>> getRatingList(@PathVariable Long movieId) {
         List<ResponseRatingDTO> ratingList = ratingLiveService.getRating(movieId);
