@@ -13,10 +13,10 @@ data class Rating(
     val id: Long,
 
     @Column(name = "user_id")
-    var user_id: Long?,
+    var userId: Long?,
 
     @Column(name = "movie_id")
-    var movie_id: Long,
+    var movieId: Long,
 
     var rating:Long
 

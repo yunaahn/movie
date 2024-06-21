@@ -13,8 +13,8 @@ class RatingMapper : Mapper<RatingDTO, Rating> {
 
     override fun fromEntity(entity: Rating): RatingDTO = RatingDTO(
         entity.id,
-        entity.user_id,
-        entity.movie_id,
+        entity.userId,
+        entity.movieId,
         entity.rating
 
     )
