@@ -34,7 +34,7 @@ public class RatingController {
     private RatingRepository ratingRepository;
 
     //평점 메김
-    @PostMapping("/update")
+    //@PostMapping("/update")
     public void publish( @RequestBody Rating rating) {
         messagePublisher.publish(rating.toString());
     }
@@ -53,7 +53,7 @@ public class RatingController {
 
 
     //db에 저장,
-    @PostMapping
+    @PostMapping("/update")
     public ResponseEntity<Rating> rateMovie(@RequestBody Rating rating) {
         Optional<Rating> existingRating = ratingRepository.findByUserIdAndMovieId(rating.getUserId(), rating.getMovieId());
         if (existingRating.isPresent()) {

@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,11 +32,15 @@ public class SecurityConfig  {
     private final JWTUtil jwtUtil;
 
     private final CustomUserDetailService customUserDetailService;
+    private final CorsFilter corsFilter;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, CustomUserDetailService customUserDetailsService, CustomUserDetailService customUserDetailService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil,
+                          CustomUserDetailService customUserDetailsService, CustomUserDetailService customUserDetailService
+            , CorsFilter corsFilter) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.customUserDetailService = customUserDetailService;
+        this.corsFilter = corsFilter;
     }
 
 //Loginfilter 인자로 넘기기 위한 AuthenticationManager를 등록
@@ -49,17 +54,17 @@ public class SecurityConfig  {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8083/", "http://localhost:5173/"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-        // you can configure many allowed CORS headers
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8083/", "http://localhost:5173/"));
+//        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+//        // you can configure many allowed CORS headers
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -78,18 +83,21 @@ public class SecurityConfig  {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/**","/movie/**", "/join/**","/spring/upload",
-                                "/loginpage/**", "/login/**", "/swagger-ui/**").permitAll() //인가 필요 없음
+                                "/loginpage/**", "/login/**", "/rating/**", "/swagger-ui/**").permitAll() //인가 필요 없음
                         .requestMatchers("/admin").hasRole("ADMIN") //해당페이지는 어떤 롤 필요한지
                         .anyRequest().authenticated());// 그 외는 로그인해야함
         http
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class);
+        http
                 .addFilterBefore(new JWTFilter(jwtUtil, customUserDetailService), LoginFilter.class);
 
-        //필터 체인 추가 -> 로그인 필터에 authenticationManager 로 자격증명 확인, 토큰 생성 프로세스를 탐
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+
 
 
         return http.build();
