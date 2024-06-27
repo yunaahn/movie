@@ -1,15 +1,13 @@
 package com.example.movieapi.service
 
+import com.example.movieapi.dto.GenreDTO
 import com.example.movieapi.dto.MovieDTO
-import com.example.movieapi.dto.RatingDTO
-import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
-import com.example.movieapi.entity.Rating
+import com.example.movieapi.repository.GenreRepository
 import com.example.movieapi.repository.MovieRepository
 import com.example.movieapi.repository.MovieRepositoryImpl
 import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.utils.mapper.MovieMapper
-import com.example.movieapi.utils.mapper.RatingMapper
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.text.DecimalFormat
@@ -20,7 +18,8 @@ class MovieServiceImpl(
     private val movieRepositoryImpl: MovieRepositoryImpl,
     private val movieMapper: MovieMapper,
     private val ratingRepository: RatingRepository,
-    private val ratingService: RatingService
+    private val ratingService: RatingService,
+    private val genreRepository: GenreRepository
 ) : MovieService {
 
     val log = LoggerFactory.getLogger(MovieServiceImpl::class.java)!!
@@ -67,9 +66,12 @@ class MovieServiceImpl(
 
         val averageRating = ratings.map { it.rating }.average().toDouble()
         val formattedRating = DecimalFormat("#.##").format(averageRating)
+        val genre = genreRepository.findById(movie.genre_id).orElseThrow { NoSuchElementException("Genre not found") }
+        val genreDTO = GenreDTO(id = genre.id, name = genre.name)
+
         log.info("ratings =" + ratings)
         log.info("averageRating =" + formattedRating)
-        return MovieWithRating(movieDTO, formattedRating)
+        return MovieWithRating(movieDTO, formattedRating, genreDTO)
     }
 
     override fun searchMoviesByNameContaining(keyword: String, orderBy : String): List<MovieDTO> {

@@ -7,6 +7,8 @@ import com.example.movieapi.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class JoinService {
 
@@ -37,6 +39,11 @@ public class JoinService {
 
         userRepository.save(data);
 
+    }
+
+    public Integer findId(String username){
+        Optional<Integer> userIdOptional = Optional.ofNullable(userRepository.findIdByUsername(username));
+        return userIdOptional.orElse(0);
     }
 
 
