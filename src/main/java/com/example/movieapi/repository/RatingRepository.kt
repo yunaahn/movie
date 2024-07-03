@@ -14,4 +14,8 @@ interface RatingRepository : JpaRepository<Rating, Long> {
 
     fun findByUserIdAndMovieId(userId: Long?, movieId: Long?): Optional<Rating?>?
 
+    @Query(value = "SELECT COUNT(*) FROM Rating r WHERE r.user_id = :userId AND r.movie_id = :movieId", nativeQuery = true)
+    fun findResByUserIdAndMovieId(userId: Long, movieId: Long): Int
+
+
 }

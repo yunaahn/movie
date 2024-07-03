@@ -12,13 +12,8 @@ class MovieMapper: Mapper<MovieDTO, Movie> {
     override fun fromEntity(entity: Movie): MovieDTO = MovieDTO(
         entity.id,
         entity.name,
-        entity.rating,
         entity.genre_id,
-        attachFile = if (entity.attachFileName != null) {
-            UploadFile(entity.attachFileName, entity.attachFileName)
-        } else {
-            UploadFile("", "")
-        }
+        entity.attachFileName
 
 
     )
@@ -27,9 +22,8 @@ class MovieMapper: Mapper<MovieDTO, Movie> {
     override fun toEntity(domain: MovieDTO): Movie = Movie(
         domain.id,
         domain.name,
-        domain.rating,
         domain.genre_id,
-        domain.attachFile.storeFileName
+        domain.attachFileName
 
     )
 }

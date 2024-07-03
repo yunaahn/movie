@@ -10,11 +10,9 @@ data class MovieDTO(
 
     var name: String,
 
-    var rating:Int,
-
     val genre_id: Long?,
 
-    var attachFile: UploadFile = UploadFile("", "")
+    var attachFileName: String?
 
 
     )

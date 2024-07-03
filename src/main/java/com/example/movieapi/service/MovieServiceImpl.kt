@@ -71,6 +71,7 @@ class MovieServiceImpl(
 
         log.info("ratings =" + ratings)
         log.info("averageRating =" + formattedRating)
+
         return MovieWithRating(movieDTO, formattedRating, genreDTO)
     }
 

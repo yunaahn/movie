@@ -5,6 +5,7 @@ import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
 import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.service.MovieService
+import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import lombok.extern.log4j.Log4j2
 import org.slf4j.LoggerFactory
@@ -29,16 +30,19 @@ class MovieController (
 
 
     private final val logger = LoggerFactory.getLogger(javaClass)
-    //영화 추가
+    // 영화 추가
     @PostMapping("/add")
     fun createMovie(
-        @RequestBody movieDTO: MovieDTO
-        , @RequestParam("file") file: MultipartFile
-        , request: HttpServletRequest
-    ) : ResponseEntity<MovieDTO> {
+        @RequestParam("file") file: MultipartFile,
+        @RequestBody movieDTO: String,
+        request: HttpServletRequest
+    ): ResponseEntity<MovieDTO> {
+        // movieDTO를 직접 파싱
+        val objectMapper = ObjectMapper()
+        val movieDTOObj = objectMapper.readValue(movieDTO, MovieDTO::class.java)
 
-        val gen = movieDTO.genre_id;
-        logger.debug("genre =",gen)
+        logger.debug("genre_id = {}", movieDTOObj.genre_id)
+        logger.debug("name = {}", movieDTOObj.name)
 
         logger.info("request = {}", request)
         logger.info("file = {}", file)
@@ -47,9 +51,11 @@ class MovieController (
             val fullPath = fileDir + file.originalFilename
             logger.info("fullPath = {}", fullPath)
             file.transferTo(File(fullPath))
+            movieDTOObj.attachFileName = file.originalFilename // 파일명 저장
         }
 
-        return ResponseEntity(movieService.createMovie(movieDTO), HttpStatus.OK)
+        val savedMovie = movieService.createMovie(movieDTOObj)
+        return ResponseEntity.ok(savedMovie)
     }
 
 //    @PostMapping("/upload")

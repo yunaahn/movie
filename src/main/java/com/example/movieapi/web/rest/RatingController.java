@@ -1,7 +1,6 @@
 package com.example.movieapi.web.rest;
 
 
-import com.example.movieapi.chat.model.Message;
 import com.example.movieapi.configuration.RedisPublisher;
 import com.example.movieapi.configuration.RedisSubscriber;
 import com.example.movieapi.dto.ResponseRatingDTO;
@@ -10,6 +9,7 @@ import com.example.movieapi.repository.RatingRepository;
 import com.example.movieapi.service.RatingLiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,8 +68,8 @@ public class RatingController {
     }
 
     @GetMapping("/{userId}/{movieId}")
-    public ResponseEntity<Rating> getRating(@PathVariable Long userId, @PathVariable Long movieId) {
-        Optional<Rating> rating = ratingRepository.findByUserIdAndMovieId(userId, movieId);
-        return rating.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+    public Integer getRating(@PathVariable("userId") Long userId, @PathVariable("movieId") Long movieId) {
+        Integer rating = ratingRepository.findResByUserIdAndMovieId(userId, movieId);
+        return rating;
     }
 }
