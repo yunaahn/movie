@@ -6,6 +6,7 @@ import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.service.MovieService
 import com.example.movieapi.utils.mapper.MovieMapper
 import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.servlet.http.HttpServletRequest
 import lombok.extern.log4j.Log4j2
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -34,8 +35,9 @@ class MovieController (
     @PostMapping("/add")
     fun createMovie(
         @RequestPart("movieDTO") movieDTOJson: String,
-        @RequestPart("file") file: MultipartFile
-    ): ResponseEntity<Void> {
+        @RequestPart("file") file: MultipartFile,
+        request: HttpServletRequest
+    ): ResponseEntity<Map<String, String>> {
         val objectMapper = ObjectMapper()
         val movieDTO: MovieDTO
 
@@ -46,16 +48,30 @@ class MovieController (
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
 
+        val gen = movieDTO.genreId
+        logger.debug("genre = $gen")
+
+        logger.info("request = {}", request)
+        logger.info("file = {}", file)
+
+        val fullPath: String
         if (!file.isEmpty) {
-            val fullPath = "$fileDir/${file.originalFilename}"
+            fullPath = "$fileDir/${file.originalFilename}"
             logger.info("fullPath = $fullPath")
             file.transferTo(File(fullPath))
             movieDTO.attachFile.storeFileName = file.originalFilename
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
 
         movieService.createMovie(movieDTO)
-        return ResponseEntity(HttpStatus.OK)
+
+        // 파일 URL 반환
+        val fileUrl = "http://localhost:8083/files/${file.originalFilename}"
+        val response = mapOf("fileUrl" to fileUrl)
+        return ResponseEntity(response, HttpStatus.OK)
     }
+
 
 
 
