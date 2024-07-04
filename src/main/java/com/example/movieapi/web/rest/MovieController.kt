@@ -1,12 +1,11 @@
 package com.example.movieapi.web.rest
 
 import com.example.movieapi.dto.MovieDTO
-import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
 import com.example.movieapi.repository.RatingRepository
 import com.example.movieapi.service.MovieService
+import com.example.movieapi.utils.mapper.MovieMapper
 import com.fasterxml.jackson.databind.ObjectMapper
-import jakarta.servlet.http.HttpServletRequest
 import lombok.extern.log4j.Log4j2
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -22,7 +21,8 @@ import java.io.File
 @CrossOrigin(origins = arrayOf("http://localhost:5175"))
 class MovieController (
     private val movieService: MovieService,
-    private val ratingRepository: RatingRepository
+    private val ratingRepository: RatingRepository,
+    private val movieMapper : MovieMapper
 ) {
 
     @Value("\${file.dir}")
@@ -30,33 +30,34 @@ class MovieController (
 
 
     private final val logger = LoggerFactory.getLogger(javaClass)
-    // 영화 추가
+    //영화 추가
     @PostMapping("/add")
     fun createMovie(
-        @RequestParam("file") file: MultipartFile,
-        @RequestBody movieDTO: String,
-        request: HttpServletRequest
-    ): ResponseEntity<MovieDTO> {
-        // movieDTO를 직접 파싱
+        @RequestPart("movieDTO") movieDTOJson: String,
+        @RequestPart("file") file: MultipartFile
+    ): ResponseEntity<Void> {
         val objectMapper = ObjectMapper()
-        val movieDTOObj = objectMapper.readValue(movieDTO, MovieDTO::class.java)
+        val movieDTO: MovieDTO
 
-        logger.debug("genre_id = {}", movieDTOObj.genre_id)
-        logger.debug("name = {}", movieDTOObj.name)
-
-        logger.info("request = {}", request)
-        logger.info("file = {}", file)
-
-        if (!file.isEmpty) {
-            val fullPath = fileDir + file.originalFilename
-            logger.info("fullPath = {}", fullPath)
-            file.transferTo(File(fullPath))
-            movieDTOObj.attachFileName = file.originalFilename // 파일명 저장
+        try {
+            movieDTO = objectMapper.readValue(movieDTOJson, MovieDTO::class.java)
+        } catch (e: Exception) {
+            logger.error("Error parsing movieDTO JSON: ${e.message}")
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
 
-        val savedMovie = movieService.createMovie(movieDTOObj)
-        return ResponseEntity.ok(savedMovie)
+        if (!file.isEmpty) {
+            val fullPath = "$fileDir/${file.originalFilename}"
+            logger.info("fullPath = $fullPath")
+            file.transferTo(File(fullPath))
+            movieDTO.attachFile.storeFileName = file.originalFilename
+        }
+
+        movieService.createMovie(movieDTO)
+        return ResponseEntity(HttpStatus.OK)
     }
+
+
 
 //    @PostMapping("/upload")
 //    fun saveFile(

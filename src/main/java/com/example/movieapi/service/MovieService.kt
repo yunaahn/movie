@@ -3,8 +3,6 @@ package com.example.movieapi.service
 import com.example.movieapi.dto.MovieDTO
 import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
-import com.example.movieapi.repository.MovieRepository
-import com.example.movieapi.utils.mapper.MovieMapper
 import org.springframework.stereotype.Service
 
 

@@ -2,6 +2,7 @@ package com.example.movieapi.service
 
 import com.example.movieapi.dto.GenreDTO
 import com.example.movieapi.dto.MovieDTO
+import com.example.movieapi.entity.Movie
 import com.example.movieapi.entity.MovieWithRating
 import com.example.movieapi.repository.GenreRepository
 import com.example.movieapi.repository.MovieRepository
@@ -66,7 +67,7 @@ class MovieServiceImpl(
 
         val averageRating = ratings.map { it.rating }.average().toDouble()
         val formattedRating = DecimalFormat("#.##").format(averageRating)
-        val genre = genreRepository.findById(movie.genre_id).orElseThrow { NoSuchElementException("Genre not found") }
+        val genre = genreRepository.findById(movie.genreId).orElseThrow { NoSuchElementException("Genre not found") }
         val genreDTO = GenreDTO(id = genre.id, name = genre.name)
 
         log.info("ratings =" + ratings)
